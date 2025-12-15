@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[OrderItem]
+(
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    OrderId UNIQUEIDENTIFIER NOT NULL,
+    MenuItemId UNIQUEIDENTIFIER NOT NULL,
+    Quantity INT NOT NULL,
+    UnitPrice DECIMAL(10,2) NOT NULL,
+    CONSTRAINT FK_OrderItem_Order FOREIGN KEY (OrderId)
+        REFERENCES [Order](Id),
+    CONSTRAINT FK_OrderItem_MenuItem FOREIGN KEY (MenuItemId)
+        REFERENCES MenuItem(Id)
+)

@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[MenuItem]
+(
+   Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    RestaurantId UNIQUEIDENTIFIER NOT NULL,
+    Name NVARCHAR(150) NOT NULL,
+    Price DECIMAL(10,2) NOT NULL,
+    IsAvailable BIT NOT NULL,
+    CONSTRAINT FK_MenuItem_Restaurant FOREIGN KEY (RestaurantId)
+        REFERENCES Restaurant(Id)
+)

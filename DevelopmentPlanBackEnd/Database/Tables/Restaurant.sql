@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[Restaurant]
+(
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    Name NVARCHAR(150) NOT NULL,
+    IsOpen BIT NOT NULL,
+    CreatedAt DATETIME2 NOT NULL
+)
