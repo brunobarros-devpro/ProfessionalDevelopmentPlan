@@ -1,4 +1,7 @@
-﻿using Domain.Interfaces;
+﻿using Domain.Entities;
+using Domain.Factories;
+using Domain.Interfaces;
+using Infrastructure.Repositories.Customer;
 using Infrastructure.Repositories.Order;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +18,9 @@ namespace Infrastructure
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IOrderFactory, OrderFactory>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
 
             return services;
         }

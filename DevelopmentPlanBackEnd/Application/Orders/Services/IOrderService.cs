@@ -6,5 +6,8 @@ namespace Application.Orders.Services
     {
         Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request);
         Task<GetOrderResponse?> GetOrderByIdAsync(Guid orderId);
+        Task<IEnumerable<GetOrderResponse>> GetAllOrdersAsync();
+        Task<GetOrderResponse?> UpdateOrderAsync(Guid orderId, UpdateOrderRequest request);
+        Task<bool> DeleteOrderAsync(Guid orderId);
     }
 }

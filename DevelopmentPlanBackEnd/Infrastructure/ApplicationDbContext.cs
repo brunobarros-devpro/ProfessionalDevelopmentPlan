@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Costumer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -7,6 +8,7 @@ namespace Infrastructure
     {
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+        public DbSet<Customer> Customers => Set<Customer>();
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

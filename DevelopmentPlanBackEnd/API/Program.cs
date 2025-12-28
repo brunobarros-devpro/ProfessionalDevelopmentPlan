@@ -1,7 +1,26 @@
 using Application.Orders.Services;
+using Domain.Interfaces;
 using Infrastructure;
+using Infrastructure.Repositories.Customer;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("SecureCors", policy =>
+    {
+        policy
+            .WithOrigins(allowedOrigins!)
+            .WithMethods("GET", "POST", "PUT", "DELETE")
+            .WithHeaders("Content-Type", "Authorization")
+            .AllowCredentials();
+    });
+});
+
 
 // Add services to the container.
 
@@ -23,6 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("SecureCors");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
