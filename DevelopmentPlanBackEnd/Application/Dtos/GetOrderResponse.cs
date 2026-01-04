@@ -15,5 +15,6 @@
         public decimal UnitPrice { get; init; }
         public int Quantity { get; init; }
         public decimal Total { get; init; }
+        public Guid MenuItemId { get; set; }
     }
 }

@@ -29,6 +29,15 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Environment variables 🔧
+
+This project reads the base URL for the Orders API from environment variables so you can configure it per environment without changing code.
+
+- `NEXT_PUBLIC_ORDERS_API_BASE` — preferred, the full base URL for the Orders API (for example `https://api.example.com`).
+- `NEXT_PUBLIC_API_URL` — optional fallback used by other services; if both are unset, the app falls back to `https://localhost:7166`.
+
+For local development, copy `.env.example` to `.env.local` and edit it (do not commit `.env.local`). During deployment, set these variables in your hosting provider.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

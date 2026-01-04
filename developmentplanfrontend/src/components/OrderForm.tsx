@@ -1,83 +1,145 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OrderService } from "../services/orderService";
+import { MenuService } from "../services/menuService";
+import { Order, OrderItem } from "../Types/Order";
 
-export default function OrderForm({ onCreated }: { onCreated: (o: any) => void }) {
-  const [restaurantId, setRestaurantId] = useState("");
-  const [items, setItems] = useState([{ menuItemId: "", quantity: 1, unitPrice: 0 }]);
+const RESTAURANT_ID = "CA777F9E-AD06-412F-B2C2-84D1E9CC8307";
+const COSTUMER_ID = "B21DFB63-E78A-469E-B335-E44F288627E8";
+
+export default function OrderForm({
+  initialOrder,
+  onSubmit,
+}: {
+  initialOrder?: Order;
+  onSubmit?: (order: Order) => void;
+}) {
+  const [items, setItems] = useState<OrderItem[]>([
+    { menuItemId: "", quantity: 1, unitPrice: 0, name: "" },
+  ]);
+  const [menuItems, setMenuItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const isEdit = !!initialOrder;
+
+  useEffect(() => {
+    MenuService.listMenuItems(RESTAURANT_ID).then(setMenuItems);
+  }, []);
+
+  useEffect(() => {
+    if (initialOrder?.items?.length) {
+      setItems(initialOrder.items);
+    }
+  }, [initialOrder]);
+
+  const updateItem = (index: number, changes: Partial<OrderItem>) => {
+    setItems((prev) =>
+      prev.map((it, i) => (i === index ? { ...it, ...changes } : it))
+    );
+  };
+
+  const validItems = items.filter((i) => i.menuItemId);
+
+  const submit = async () => {
+    if (!validItems.length) return;
+
     setLoading(true);
-    const order = { restaurantId, items };
-    const created = await OrderService.createOrder(order);
-    onCreated(created);
-    setRestaurantId("");
-    setItems([{ menuItemId: "", quantity: 1, unitPrice: 0 }]);
-    setLoading(false);
+
+    const payload: Order = {
+      restaurantId: RESTAURANT_ID,
+      items: validItems,
+      orderId: initialOrder?.orderId || "",
+      total: validItems.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0),
+      status: initialOrder?.status || "Pending",
+      customerId: COSTUMER_ID
+    };
+
+    try {
+      const updateId = initialOrder?.orderId ?? initialOrder?.orderId;
+      const result = isEdit && updateId
+        ? await OrderService.updateOrder(updateId, payload)
+        : await OrderService.createOrder(payload);
+
+      onSubmit?.(result);
+
+      if (!isEdit) {
+        setItems([{ menuItemId: "", quantity: 1, unitPrice: 0, name: "" }]);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="border p-4 rounded space-y-3">
-      <h2 className="font-semibold text-lg">Criar Order</h2>
-
-      <input
-        placeholder="Restaurant ID"
-        value={restaurantId}
-        onChange={(e) => setRestaurantId(e.target.value)}
-        className="border p-2 rounded w-full"
-      />
+      <h2 className="font-semibold text-lg">
+        {isEdit ? "Edit Order" : "Create Order"}
+      </h2>
 
       {items.map((item, i) => (
-        <div key={i} className="grid grid-cols-3 gap-2">
-          <input
-            placeholder="Menu Item ID"
+        <div key={i} className="grid grid-cols-4 gap-2">
+          <select
             value={item.menuItemId}
             onChange={(e) => {
-              const copy = [...items];
-              copy[i].menuItemId = e.target.value;
-              setItems(copy);
+              const found = menuItems.find(m => m.id === e.target.value);
+              updateItem(i, {
+                menuItemId: e.target.value,
+                unitPrice: found?.price ?? 0,
+                name: found?.name ?? "",
+              });
             }}
             className="border p-2 rounded"
-          />
+          >
+            <option className="bg-black" value="">-- select item --</option>
+            {menuItems.map((m) => (
+              <option className="bg-black" key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+
           <input
             type="number"
-            placeholder="Qty"
             value={item.quantity}
-            onChange={(e) => {
-              const copy = [...items];
-              copy[i].quantity = Number(e.target.value);
-              setItems(copy);
-            }}
+            onChange={(e) =>
+              updateItem(i, { quantity: Number(e.target.value) })
+            }
             className="border p-2 rounded"
           />
+
           <input
             type="number"
-            placeholder="Price"
             value={item.unitPrice}
-            onChange={(e) => {
-              const copy = [...items];
-              copy[i].unitPrice = Number(e.target.value);
-              setItems(copy);
-            }}
+            disabled
             className="border p-2 rounded"
           />
+
+          <button
+            onClick={() =>
+              setItems(items.filter((_, idx) => idx !== i))
+            }
+            className="bg-red-500 text-white rounded px-2"
+          >
+            ✕
+          </button>
         </div>
       ))}
 
       <button
-        onClick={() => setItems([...items, { menuItemId: "", quantity: 1, unitPrice: 0 }])}
+        onClick={() =>
+          setItems([...items, { menuItemId: "", quantity: 1, unitPrice: 0, name: "" }])
+        }
         className="text-sm underline"
       >
         + Add item
       </button>
 
       <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="px-4 py-2 bg-black text-white rounded w-full"
+        onClick={submit}
+        disabled={loading || !validItems.length}
+        className="w-full bg-black text-white py-2 rounded disabled:opacity-50"
       >
-        {loading ? "Creating..." : "Create Order"}
+        {loading ? "Saving..." : isEdit ? "Save" : "Create"}
       </button>
     </div>
   );

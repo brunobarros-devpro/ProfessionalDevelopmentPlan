@@ -1,7 +1,9 @@
+using Application.MenuItems.Services;
 using Application.Orders.Services;
 using Domain.Interfaces;
 using Infrastructure;
 using Infrastructure.Repositories.Customer;
+using Infrastructure.Repositories.MenuItem;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 
 builder.Services.AddControllers();
 

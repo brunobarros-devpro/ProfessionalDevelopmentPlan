@@ -2,6 +2,7 @@
 using Domain.Factories;
 using Domain.Interfaces;
 using Infrastructure.Repositories.Customer;
+using Infrastructure.Repositories.MenuItem;
 using Infrastructure.Repositories.Order;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ namespace Infrastructure
             services.AddScoped<IOrderFactory, OrderFactory>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IMenuItemRepository, MenuItemRepository>();
 
             return services;
         }

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const ordersApi = axios.create({
-  baseURL: "https://localhost:7166/api/orders",
+  baseURL: `${process.env.NEXT_PUBLIC_ORDERS_API_BASE}/api/orders`,
   headers: {
     "Content-Type": "application/json",
   },

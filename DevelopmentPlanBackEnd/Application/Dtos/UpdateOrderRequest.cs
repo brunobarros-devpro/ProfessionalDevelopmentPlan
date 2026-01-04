@@ -8,7 +8,7 @@
 
     public class UpdateOrderItemDto
     {
-        public Guid ProductId { get; init; }
+        public Guid MenuItemId { get; init; }
         public int Quantity { get; init; }
         public decimal UnitPrice { get; set; }
     }

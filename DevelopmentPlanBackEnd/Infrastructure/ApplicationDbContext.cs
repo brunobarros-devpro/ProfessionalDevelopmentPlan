@@ -9,6 +9,8 @@ namespace Infrastructure
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<Customer> Customers => Set<Customer>();
+        public DbSet<MenuItem> MenuItems => Set<MenuItem>();
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

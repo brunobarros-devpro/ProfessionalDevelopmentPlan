@@ -46,6 +46,7 @@ namespace Application.Orders.Services
                     UnitPrice = i.UnitPrice,
                     Quantity = i.Quantity,
                     Total = (i.Quantity * i.UnitPrice),
+                    MenuItemId = i.MenuItemId
                 }).ToList()
             });
         }
@@ -68,7 +69,8 @@ namespace Application.Orders.Services
                     Name = i.MenuItem?.Name ?? string.Empty,
                     UnitPrice = i.UnitPrice,
                     Quantity = i.Quantity,
-                    Total = (i.Quantity * i.UnitPrice)
+                    Total = (i.Quantity * i.UnitPrice),
+                    MenuItemId = i.MenuItemId
                 }).ToList()
             };
         }
@@ -83,7 +85,7 @@ namespace Application.Orders.Services
 
             var newItems = request.Items.Select(item => new OrderItem
             {
-                MenuItemId = item.ProductId,
+                MenuItemId = item.MenuItemId,
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 OrderId = order.Id
