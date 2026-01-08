@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { OrderService } from "../../services/orderService";
 import OrderForm from "../../components/OrderForm";
+import type { Order } from "../../Types/Order";
 
 export default function OrdersPage() {
-    const [orders, setOrders] = useState<any[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

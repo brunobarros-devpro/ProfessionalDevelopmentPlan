@@ -1,5 +1,6 @@
-import { MenuApi } from "../lib/menuApi";
+import { MenuApi, type MenuItem } from "../lib/menuApi";
 
 export const MenuService = {
-  listMenuItems: (restaurantId: string) => MenuApi.listByRestaurant(restaurantId),
+  listMenuItems: (restaurantId: string): Promise<MenuItem[]> =>
+    MenuApi.listByRestaurant(restaurantId),
 };
